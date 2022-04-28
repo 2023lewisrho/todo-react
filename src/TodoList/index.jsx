@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useEffect, useState } from 'react';
-import * as JsSearch from 'js-search';
+import SearchBox from '../SearchBox';
 
 const EverythingContainer = styled.div`
     display: flex;
@@ -17,9 +17,8 @@ const SeperatorLine = styled.hr`
     color: transparent;
 `;
 
-function TodoItem(name, short) {
+function TodoItem(name) {
     this.name = name;
-    this.short = short;
     this.visible = true;
     this.checked = false;
 
@@ -37,7 +36,7 @@ function TodoItem(name, short) {
 }
 
 function TodoList() {
-    const [todos, setTodos] = useState(Set());
+    const [todos, setTodos] = useState(new Set());
 
     return(
         <EverythingContainer>
@@ -45,9 +44,11 @@ function TodoList() {
                 <RemainingCount>{todos.size} task(s) remaining:</RemainingCount>
                 <SeperatorLine />
             </div>
+            <SearchBox />
         </EverythingContainer>
     );
 
 }
 
-export default {TodoList, TodoItem};
+export default TodoList
+export {TodoItem}
