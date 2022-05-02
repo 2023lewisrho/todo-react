@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-import * as JsSearch from 'js-search';
+import { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { TodoItem } from '../TodoList';
+import { TodoItem } from '../todoitem';
 
 const SearchText = styled.input`
     background-color: white;
@@ -11,59 +10,37 @@ const SearchText = styled.input`
 `;
 
 function SearchBox(props) {
-    const [search, setSearch] = useState({
-        search: new JsSearch.Search("todos"),
-        todos: [],
-        looking: "",
-    });
+    const [todo_text, setTodoText] = useState("");
 
-    function onFilterCompleted() {
+    function onAddTodo(new_todo) {
+        props.onAddTodo(new_todo)
     }
 
-    function lookup(index) {
-
+    function onSearchTextChanged() {
+        props.onSearchTextChanged(todo_text);
     }
 
-    function onAddTodo() {
-        
-    }
-
-    function addTodo(name) {
-        let new_todo = TodoItem(name);
-        let new_arr = search.todos
-        new_arr.push(new_todo)
-        setSearch(prev => {
-            return {...prev, todos: new_arr}
-        })
-    }
-
-    function changedText(e) {
-        const new_lookup = e.target.value.toString();
-        console.log(new_lookup);
-        setSearch(prev => {
-            return { ...prev, looking: new_lookup }
-        })
+    function changed_text(e) {
+        let new_str = e.target.value.toString();
+        setTodoText(new_str);
+        onSearchTextChanged();
     }
 
     function check_enter(e) {
+        let text = todo_text;
+        e.target.value = "";
+
         let keypress = (e.keyCode ? e.keyCode : e.which);
-        if (keypress === 13) { 
-            addTodo(search.looking)
-            setSearch(prev => {
-                return { ...prev, looking: "" }
-            })
+        if (keypress === 13) {
+            let todo = TodoItem(text);
+            onAddTodo(todo)
         }
     }
-
-    useEffect(() => {
-        
-    }, [search.todos]);
-
 
     return (
         <div>
             <p className={"visually-hidden"} >Type Here, Enter to Add</p>
-            <SearchText type="text" placeholder="Type Here, Enter to Add" onChange={e => changedText(e)} onKeyDown={e => check_enter(e)} />
+            <SearchText type="text" placeholder="Type Here, Enter to Add" onChange={e => changed_text(e)} onKeyDown={e => check_enter(e)} />
         </div>
     );
 }
