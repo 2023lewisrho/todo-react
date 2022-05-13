@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import SearchBox from '../SearchBox';
 import * as JsSearch from 'js-search';
 import { TodoItem } from '../todoitem';
+import Todo from '../Todo';
 
 const EverythingContainer = styled.div`
     display: flex;
@@ -21,16 +22,21 @@ const SeperatorLine = styled.hr`
 
 
 function TodoList() {
-    const [displayed, setDisplayed] = useState([]);
-    const [todos, setTodos] = useState([]);
-    const search = JsSearch.Search("todo");
+    const [todoState, setTodoState] = useState({
+        all: [],
+        displayed: [],
+    });
     const [boxtext, setBoxText] = useState("");
 
     function newTodoItem(new_todo) {
-        setTodos( previous => {
-            return previous.push(new_todo)
+        setTodoState( (previous) => {
+            let p = previous.all
+            p.push(new_todo)
+            return {
+                all: p,
+                ...previous
             }
-        )
+        })
     }
 
     function removeTodo(todo) {}
@@ -39,33 +45,57 @@ function TodoList() {
         setBoxText(new_text);
     }
 
-    useEffect(() => {
-        if (boxtext !== "") {
-            let lookup = todos.search.search(boxtext)
-            let new_displayed = displayed.filter(todo => {
-                let result = lookup.indexOf(todo.name) !== -1;
-                if (result >= 0) {
-                    lookup.remove(result)
-                }
-                return result;
-            })
-            setDisplayed(new_displayed)
+    function getRemaining() {
+        if (todoState.all.length === 0 || !todoState) {
+            return "No tasks remaining!"
+        } else if (todoState.all.length === 1) {
+            return `${todoState.all.length} task remaining!`
         } else {
-            setDisplayed(todos)
+            return `${todoState.all.length} tasks remaining!`
         }
-    }, [todos, boxtext, displayed])
+    }
+
+    // PERFORMANCE ISSUES!!!
+    // useEffect(() => {
+    //     const search = new JsSearch.Search("todo");
+
+    //     if (boxtext !== "") {
+    //         let lookup = search.search(boxtext);
+    //         let new_displayed = todoState.displayed.filter(todo => {
+    //             let result = lookup.indexOf(todo.name) !== -1;
+    //             if (result >= 0) {
+    //                 lookup.remove(result)
+    //             }
+    //             return result;
+    //         })
+    //         console.log(new_displayed);
+    //         setTodoState( (prev) => {
+    //             return {
+    //                 displayed: new_displayed,
+    //                 ...prev
+    //             }
+    //         } )
+    //     } else {
+    //         setTodoState( (prev) => {
+    //             return {
+    //                 displayed: prev.all,
+    //                 ...prev
+    //             }
+    //         } )        
+    //     }
+    // }, [])
 
 
     return(
         <EverythingContainer>
-            <RemainingCount>{todos.size} task(s) remaining:</RemainingCount>
+            <RemainingCount>{getRemaining()}</RemainingCount>
             <SearchBox onAddTodo={e => newTodoItem(e)} onSearchTextChanged={e => {searchTextChanged(e)}} />
             <SeperatorLine />
             <div>
                 {
-                    displayed && displayed.map(todo => {
-
-                    })
+                    todoState.displayed.map( (item, index) => (
+                        <Todo key={index} index={index}>{item.name}</Todo>
+                    ) ) 
                 }
             </div>
         </EverythingContainer>

@@ -10,29 +10,29 @@ const SearchText = styled.input`
 `;
 
 function SearchBox(props) {
-    const [todo_text, setTodoText] = useState("");
+    const [todo_text, setTodoText] = useState("")
 
     function onAddTodo(new_todo) {
         props.onAddTodo(new_todo)
     }
 
     function onSearchTextChanged() {
-        props.onSearchTextChanged(todo_text);
+        console.log(todo_text)
+        props.onSearchTextChanged(todo_text)
     }
 
     function changed_text(e) {
-        let new_str = e.target.value.toString();
-        setTodoText(new_str);
-        onSearchTextChanged();
+        let new_str = e.target.value
+        setTodoText(new_str)
+        console.log(todo_text)
+        onSearchTextChanged()
     }
 
     function check_enter(e) {
-        let text = todo_text;
-        e.target.value = "";
-
         let keypress = (e.keyCode ? e.keyCode : e.which);
         if (keypress === 13) {
-            let todo = TodoItem(text);
+            let todo = TodoItem(todo_text)
+            setTodoText("")
             onAddTodo(todo)
         }
     }
@@ -40,7 +40,7 @@ function SearchBox(props) {
     return (
         <div>
             <p className={"visually-hidden"} >Type Here, Enter to Add</p>
-            <SearchText type="text" placeholder="Type Here, Enter to Add" onChange={e => changed_text(e)} onKeyDown={e => check_enter(e)} />
+            <SearchText type="search" placeholder="Type Here, Enter to Add" onChange={changed_text} onKeyDown={check_enter}/>
         </div>
     );
 }

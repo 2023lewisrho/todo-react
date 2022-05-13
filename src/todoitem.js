@@ -1,6 +1,8 @@
 function TodoItem(name) {
-    this.name = name;
-    this.checked = false;
+    function innerGenFn(name) {
+        this.name = name;
+        this.checked = false;    
+    }
 
     function getSortFunction() {
         return function(todo1, todo2) {
@@ -13,6 +15,8 @@ function TodoItem(name) {
             }
         }
     }
+
+    return new innerGenFn(name);
 }
 
 export {TodoItem};
