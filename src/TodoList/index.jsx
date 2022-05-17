@@ -16,30 +16,33 @@ const RemainingCount = styled.p`
 `;
 
 const SeperatorLine = styled.hr`
-    background-color: gray;
-    color: transparent;
+    background-color: black;
 `;
 
 
 function TodoList() {
     const [todoState, setTodoState] = useState({
-        all: [],
-        displayed: [],
+        all: []
     });
     const [boxtext, setBoxText] = useState("");
-
     function newTodoItem(new_todo) {
         setTodoState( (previous) => {
-            let p = previous.all
-            p.push(new_todo)
+            let p = previous.all;
+            p.push(new_todo);
             return {
                 all: p,
-                ...previous
             }
         })
     }
 
-    function removeTodo(todo) {}
+    function removeTodo(todo) {
+        setTodoState( (previous) => {
+            let rm = previous.all.splice(todo, 1);
+            return {
+                all: rm,
+            }
+        })
+    }
 
     function searchTextChanged(new_text) {
         setBoxText(new_text);
@@ -89,12 +92,12 @@ function TodoList() {
     return(
         <EverythingContainer>
             <RemainingCount>{getRemaining()}</RemainingCount>
-            <SearchBox onAddTodo={e => newTodoItem(e)} onSearchTextChanged={e => {searchTextChanged(e)}} />
             <SeperatorLine />
+            <SearchBox onAddTodo={e => newTodoItem(e)} onSearchTextChanged={e => {searchTextChanged(e)}} />
             <div>
                 {
-                    todoState.displayed.map( (item, index) => (
-                        <Todo key={index} index={index}>{item.name}</Todo>
+                    todoState.all.map( (item, index) => (
+                        <Todo key={index} index={index} onRemoveClicked={removeTodo}>{item.name}</Todo>
                     ) ) 
                 }
             </div>
