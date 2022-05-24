@@ -1,15 +1,18 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BsFillTrashFill } from "react-icons/bs";
 import { useState } from "react";
 import styled from 'styled-components'
 
-const DeleteButton = styled.input`
+const DeleteButton = styled.button`
     margin-left: auto;
     align-self: flex-end;
+    border: none;
+    background: none;
 `;
 
 const TodoContainer = styled.div`
     display: flex;
     width: 100%;
+    height: 100%;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -31,7 +34,9 @@ function Todo(props) {
             <input type="checkbox" id={`todo-item-num-${order}`} name={`todo-item-num-${order}`} value="" />
             <label htmlFor={`todo-item-num-${order}`} className='visually-hidden'>{`Check Completed for Todo Item "${item.name}" (number #${order})`}</label>
             {text}
-            <DeleteButton type="button" onClick={onRemoveClicked}></DeleteButton>
+            <DeleteButton>
+                <BsFillTrashFill onClick={onRemoveClicked}/>
+            </DeleteButton>
         </TodoContainer>
     );
 }

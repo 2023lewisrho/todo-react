@@ -19,6 +19,10 @@ const SeperatorLine = styled.hr`
     background-color: black;
 `;
 
+const TodoThing = styled.div`
+    height: 2rem;
+`;
+
 
 function TodoList() {
     const [todoState, setTodoState] = useState({
@@ -37,11 +41,11 @@ function TodoList() {
 
     function removeTodo(todo) {
         setTodoState( (previous) => {
-            let rm = previous.all.splice(todo, 1);
+            previous.all.splice(todo, 1);
             return {
-                all: rm,
+                all: previous.all,
             }
-        })
+        });
     }
 
     function searchTextChanged(new_text) {
@@ -94,17 +98,16 @@ function TodoList() {
             <RemainingCount>{getRemaining()}</RemainingCount>
             <SeperatorLine />
             <SearchBox onAddTodo={e => newTodoItem(e)} onSearchTextChanged={e => {searchTextChanged(e)}} />
-            <div>
+            <TodoThing>
                 {
                     todoState.all.map( (item, index) => (
                         <Todo key={index} index={index} onRemoveClicked={removeTodo}>{item.name}</Todo>
                     ) ) 
                 }
-            </div>
+            </TodoThing>
         </EverythingContainer>
     );
 
 }
 
 export default TodoList
-export {TodoItem}
