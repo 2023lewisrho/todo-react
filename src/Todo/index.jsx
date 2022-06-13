@@ -1,4 +1,5 @@
 import { BsFillTrashFill } from "react-icons/bs";
+import { BiRadioCircleMarked, BiRadioCircle } from "react-icons/bi";
 import { useState } from "react";
 import styled from 'styled-components'
 
@@ -23,15 +24,19 @@ const TodoContainer = styled.div`
 function Todo(props) {
     const order = props.index;
     const text = props.children;
-    const [item, setItem] = useState(false);
+    const item = props.checked;
     
     function onRemoveClicked() {
         props.onRemoveClicked(order)
     }
 
+    function onChanged() {
+        props.onChanged(order, item);
+    }
+    
     return (
         <TodoContainer>
-            <input type="checkbox" id={`todo-item-num-${order}`} name={`todo-item-num-${order}`} value="" />
+            <input type="checkbox" id={`todo-item-num-${order}`} name={`todo-item-num-${order}`} checked={item} onChange={onChanged} />
             <label htmlFor={`todo-item-num-${order}`} className='visually-hidden'>{`Check Completed for Todo Item "${item.name}" (number #${order})`}</label>
             {text}
             <DeleteButton>

@@ -19,4 +19,14 @@ function TodoItem(name) {
     return new innerGenFn(name);
 }
 
-export {TodoItem};
+function sortTodoItems(a, b) {
+    if (a.checked && !b.checked) {
+        return -1
+    } 
+    if (!a.checked && b.checked) {
+        return 1
+    }  
+    return a.name > b.name
+}
+
+export {TodoItem, sortTodoItems};

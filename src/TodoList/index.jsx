@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { useEffect, useState } from 'react';
 import SearchBox from '../SearchBox';
 import * as JsSearch from 'js-search';
-import { TodoItem } from '../todoitem';
+import { sortTodoItems, TodoItem } from '../todoitem';
 import Todo from '../Todo';
 
 const EverythingContainer = styled.div`
@@ -42,6 +42,7 @@ function TodoList() {
     function removeTodo(todo) {
         setTodoState( (previous) => {
             previous.all.splice(todo, 1);
+            previous.all.sort(sortTodoItems);
             return {
                 all: previous.all,
             }
@@ -60,6 +61,16 @@ function TodoList() {
         } else {
             return `${todoState.all.length} tasks remaining!`
         }
+    }
+
+    function onSomethingChanged(order, state) {
+        setTodoState( (previous) => {
+            previous.all[order].checked = !state;
+            previous.all.sort(sortTodoItems);            
+            return {
+                all: previous.all,
+            }
+        });
     }
 
     // PERFORMANCE ISSUES!!!
@@ -101,7 +112,7 @@ function TodoList() {
             <TodoThing>
                 {
                     todoState.all.map( (item, index) => (
-                        <Todo key={index} index={index} onRemoveClicked={removeTodo}>{item.name}</Todo>
+                        <Todo key={index} index={index} onRemoveClicked={removeTodo} onChanged={onSomethingChanged} checked={item.checked} >{item.name}</Todo>
                     ) ) 
                 }
             </TodoThing>
